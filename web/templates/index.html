@@ -1,1 +1,60 @@
-<h1>welcome</h1>
+{%extends 'base.html'%}
+{%block body_block%}
+<div class="row">
+    <div class="col-3">
+
+    </div>
+    <div class="col-5">
+        <div class="card">
+            <div class="card-body">
+                <form action="" method="post" enctype="multipart/form-data">
+                    {%csrf_token%}
+                    {{form.as_p}}
+                    <input type="submit" value="submit">
+                </form>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                {%for p in posts%}
+                <p><small>@{{p.user}}</small></p>
+                <img src="{{p.image.url}}" width="100%" alt="">
+                {%endfor%}
+
+            </div>
+        </div>
+
+    </div>
+    <div class="col-4">
+
+    </div>
+</div>
+<form action="" method="post" enctype="multipart/form-data">
+    {%csrf_token%}
+    {{form.as_p}}
+    <input type="submit" value="submit">
+</form>
+{%for p in posts%}
+{{p.user}}
+{{p.title}}
+<!-- <img src="{{p.image.url}}" alt=""> -->
+{{p.created_date}}
+{{p.likes}}
+<a href="{%url 'add-like' p.id%}" class="btn btn-ouline-secondary">Like</a>
+
+<form action="{%url 'add-comments' p.id%}" method="post">
+    {%csrf_token%}
+    <input type="text" class="form-control" name="comment" required>
+    <button type="submit" class="btn btn-primary">Add comment</button>
+</form>
+    {%for comment in p.posts_comments%}
+    {{comment.user}}
+    {{comment.comment}}
+    {{comment.created_date}}
+    {%endfor%}
+
+
+
+
+{%endfor%}
+{%endblock%}
