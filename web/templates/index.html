@@ -1,60 +1,105 @@
 {%extends 'base.html'%}
 {%block body_block%}
-<div class="row">
-    <div class="col-3">
 
-    </div>
-    <div class="col-5">
-        <div class="card">
-            <div class="card-body">
-                <form action="" method="post" enctype="multipart/form-data">
-                    {%csrf_token%}
-                    {{form.as_p}}
-                    <input type="submit" value="submit">
-                </form>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-body">
-                {%for p in posts%}
-                <p><small>@{{p.user}}</small></p>
-                <img src="{{p.image.url}}" width="100%" alt="">
-                {%endfor%}
+<!-- <style>
+    body {
+        height: 500vh;
 
-            </div>
-        </div>
+        background-color: #85FFBD;
+        background-image: linear-gradient(45deg, #85FFBD 0%, #030202 100%);
 
-    </div>
-    <div class="col-4">
+    }
 
-    </div>
+    .container-1 {
+        transform: translate(0, 50%);
+    }
+</style> -->
+<style>
+    body{
+        height: 100px;
+        background-image: url(../image/wallpaperflare.com_wallpaper\(1\).jpg);
+    }
+</style>
+<div class="conatainer border border-4 container-1">
+    <h1 class="text-center " style="background-color: rgb(154, 174, 182);" >𝓼𝓸𝓬𝓲𝓪𝓵 𝓼𝓷𝓪𝓹</h1>
 </div>
-<form action="" method="post" enctype="multipart/form-data">
-    {%csrf_token%}
-    {{form.as_p}}
-    <input type="submit" value="submit">
-</form>
-{%for p in posts%}
-{{p.user}}
-{{p.title}}
-<!-- <img src="{{p.image.url}}" alt=""> -->
-{{p.created_date}}
-{{p.likes}}
-<a href="{%url 'add-like' p.id%}" class="btn btn-ouline-secondary">Like</a>
+<div class="row">
+    <div class="col-3"></div>
+    <div class="col-5">
+        {%for p in posts%}
+        <div class="card mt-3" style="background-color: rgb(255, 253, 253);">
+            <div class="card-body">
+                
+                <p><small>@{{p.user}}</small></p>
+                <small>{{p.created_date}}</small>
+                <div style="width: 100%;">
+                    <img src="{{p.image.url}}" width="100%" alt="">
+                </div>
+                <!-- like start -->
+                <p class="d-inline card-text display-6">{{p.title}}</p><br>
+                {%if request.user in p.like.all %}
+                <a href="{%url 'add-like' p.id%}" style="height: 30px;color: grey;"><i class="fa-solid fa-heart"
+                        style="height: 30px;color: red;outline: none;"></i>{{p.likes}}</a>
+                {%else%}
+                <a href="{%url 'add-like' p.id%}" style="height: 30px;color: grey;"><i class="fa-regular fa-heart"
+                        style="height: 30px;color: red;outline: none;"></i>{{p.likes}}</a>
+                {%endif%}
+                <span style="font-family: 'Times New Roman', Times, serif;font-style: oblique;color: black;">liked by</span>
+                {%for l in p.like.all%}
+                {{l}},
+                {%endfor%}
 
-<form action="{%url 'add-comments' p.id%}" method="post">
-    {%csrf_token%}
-    <input type="text" class="form-control" name="comment" required>
-    <button type="submit" class="btn btn-primary">Add comment</button>
-</form>
-    {%for comment in p.posts_comments%}
-    {{comment.user}}
-    {{comment.comment}}
-    {{comment.created_date}}
-    {%endfor%}
+                <!-- likeend  -->
+
+                <!-- <a href="{%url 'add-like' p.id%}" style="height: 30px;color: grey;"><i class="fa-solid fa-heart"
+                        style="height: 30px;color: red;outline: none;"></i>{{p.likes}}</a> -->
+
+                <!-- accordian -->
+                <button type="button" class="btn btn-outline-info shadow-sm text-dark collapsed"
+                    data-bs-toggle="collapse" data-bs-target="#flush-collapse{{p.id}}" aria-expanded="false"
+                    aria-controls="flush-collapseOne"><i class="fa-solid fa-comment" style="color: blue;"></i></button>
+                <div class="accordion accordion-flush" id="accordionFlushExample">
+                    <div class="accordion-item">
+                        <div id="flush-collapse{{p.id}}" class="accordion-collapse collapse"
+                            aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample" style="">
+                            <!-- comments start  -->
+                            <form action="{%url 'add-comments' p.id%}" method="post">
+                                {%csrf_token%}
+                                <input type="text" class="d-inline-flex p-2 mt-2 " placeholder="Add your comment"
+                                    name="comment" required>
+                                <button type="submit" class="btn btn-outline-success mt-2 float-end"><i
+                                        class="fas fa-angle-double-right"></i></button>
+                            </form>
+                            <!-- commentsend  -->
+                            {%for comment in p.posts_comments%}
+                            <div class="card-body bg-light mt-2">
+                                <p style="display: inline;"><small> <i class="fa-solid fa-user "></i>
+                                        {{comment.user}}</small></p>
+                                <small>{{comment.created_date}}</small>
+                                <p>{{comment.comment}}<a href="{%url 'comment-delete' comment.id%}"><button class="fas fa-trash" style="margin-bottom: 10px; border-radius: 50%;" >Delete</button></a></p>
+                                
+                                <hr>
+                                
+                            </div>
+                            {%endfor%}
+                        </div>
+                    </div>
+                    <hr>
 
 
+                </div>
+            </div>
+            
+        </div>
+        {%endfor%}
+    </div>
+    
+    <div class="col-4"></div>
+</div>
+<!-- nav start  -->
 
+<!-- nav end  -->
+<!-- tranding post  -->
 
-{%endfor%}
+<!-- tranding end  -->
 {%endblock%}
